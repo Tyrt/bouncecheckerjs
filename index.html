@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>Bounce Checker</title>
+	<!-- HTML version :: 1.1.0 -->
+	
+	<!-- User config -->
+	<script type="text/javascript">
+		/* START USER CONFIG */
+		
+		// Edit these options to set default on load checked options
+		
+			// Check angles by default, 0 = Off, 1 = On
+			var u_check_angles = 1;
+			
+				// What type of start for angle checking, 0 = Uncrouched, 1 = Crouched
+				var u_start_type = 0;
+				
+				// What type of land for angle checking, 0 = Uncrouched, 1 = Crouched
+				var u_land_type = 0;
+		
+		
+			// Rocket launcher type, 0 = Stock, 1 = Original
+			var u_rocket_launcher_type = 0;
+			
+			// Check special starts by default, 0 = Off, 1 = On
+			var u_check_special_start = 1;
+		
+		/* END USER CONFIG */
+	</script>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/jumbotron-narrow.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	<script type="text/javascript" src="js/jquery-2.1.4.min.js" ></script>
+	<script type="text/javascript" src="js/bouncetoolsCore.js" ></script>
+	<script type="text/javascript" src="js/bouncetoolsDisplay.js" ></script>
+	<script type="text/javascript" src="js/bootstrap.min.js" ></script>
+
+	<!---
+	
+		Original sourcemod plugin by nolem 
+		http://tf2rj.com/forum/index.php?topic=1374
+		
+		http://jump.tf/
+		
+	--->
+	
+  </head>
+
+  <body>
+
+	<div class="container">
+		<div class="header clearfix">
+			<h3 class="text-muted">Bounce Checker</h3>
+		</div>
+
+		<div class="jumbotron">
+		
+			<form class="form-inline">
+
+				<div class="row">
+					<div class="col-md-1"></div>
+					<div class="col-md-10">
+						
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Enter height..." size="35" maxlength="5" id="txt_height" data-toggle="tooltip" title="Distance to the platform to bounce on" onkeypress="checkEnterPress(event);">
+							<span class="input-group-btn" style="width:0px;"></span>
+							<input type="text" class="form-control" placeholder="60.00" size="1" maxlength="5" style="margin-left:-1px"  id="txt_nearestAngle" data-toggle="tooltip" title="Angle to start searching from" onkeypress="checkEnterPress(event);">
+							<span class="input-group-btn">
+								<button class="btn btn-primary" type="button" name="btn_findBounce" onclick='m()'>Find Bounces</button>
+								<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="sr-only"></span> <span class="caret"></span></button>
+								<ul class="dropdown-menu">
+								  <li><a href="#" class="small" tabIndex="-1" onclick="toggle_chkBox('chk_angleCheck');"><input type="checkbox" id="chk_angleCheck" value="CheckAngles" onclick="toggle_chkBox('chk_angleCheck');" checked>&nbsp;Check Angles</a></li>
+								  <li role="separator" class="divider"></li>
+								  <li><a href="#" class="small" tabIndex="-1" onclick="document.getElementById('rad_startUn').checked = true;"><input id="rad_startUn" type="radio" name="rad_start" checked>&nbsp;Start Uncrouched</a></li>
+								  <li><a href="#" class="small" tabIndex="-1" onclick="document.getElementById('rad_startC').checked = true;"><input id="rad_startC" type="radio" name="rad_start">&nbsp;Start Crouched</a></li>
+								  <li role="separator" class="divider"></li>
+								  <li><a href="#" class="small" tabIndex="-1" onclick="document.getElementById('rad_landUn').checked = true;"><input id="rad_landUn" type="radio" name="rad_land" checked>&nbsp;Land Uncrouched</a></li>
+								  <li><a href="#" class="small" tabIndex="-1" onclick="document.getElementById('rad_landC').checked = true;"><input id="rad_landC" type="radio" name="rad_land">&nbsp;Land Crouched</a></li>
+								  <li role="separator" class="divider"></li>
+								  <li><a href="#" class="small" tabIndex="-1" onclick="document.getElementById('rad_stock').checked = true;"><input id="rad_stock" type="radio" name="rad_RL" checked>&nbsp;Stock</a></li>
+								  <li><a href="#" class="small" tabIndex="-1" onclick="document.getElementById('rad_original').checked = true;"><input id="rad_original" type="radio" name="rad_RL">&nbsp;Original</a></li>
+								  <li><a href="#" class="small" tabIndex="-1" onclick="document.getElementById('rad_cowmangler').checked = true;"><input id="rad_cowmangler" type="radio" name="rad_RL">&nbsp;Cow Mangler</a></li>
+								  <li role="separator" class="divider"></li>
+								  <li><a href="#" class="small" tabIndex="-1" onclick="toggle_chkBox('chk_specialCheck');"><input class="checkbox" type="checkbox" id="chk_specialCheck" value="CheckSpecial" onclick="toggle_chkBox('chk_specialCheck');" checked>&nbsp;Check Special</a></li>
+								</ul>
+							</span>
+						</div>
+					</div>
+					<div class="col-md-1"></div>
+				</div>
+				
+			</form>	
+			
+			<p>
+				<div id="bounceInfo"></div>
+			</p>
+			
+			<hr>
+		
+			<p>
+				<div id="bounceResults"></div>
+				<div id="bounceTips"></div>
+			</p>
+		
+
+			<hr id="hrID_midway" style="display: none;">
+			
+			<div id="divID_specialTitle" style="display: none"><h4>Special Start</h4></div>
+			<div id="divID_specialBounce"></div>
+		
+		</div>
+
+		<footer class="footer">
+			<div class="row">
+				<div class="col-md-4 text-left">
+					<a href="http://tf2rj.com/forum/index.php?topic=1374">Sourcemod plugin by nolem</a>
+				</div>
+				<div class="col-md-4 text-center">
+					1.2.1
+				</div>
+				<div class="col-md-4 text-right">
+					Created by Tyrael
+				</div>
+			</div>
+		</footer>
+
+    </div> <!-- /container -->
+	
+	<script type="text/javascript">
+		/* Default loading stuff */
+		if (u_check_angles == 0) {
+			document.getElementById('chk_angleCheck').checked = false;
+		}
+		if (u_start_type == 1) {
+			document.getElementById('rad_startC').checked = true;
+		}
+		if (u_land_type == 1) {
+			document.getElementById('rad_landC').checked = true;
+		}
+		if (u_rocket_launcher_type == 1) {
+			document.getElementById('rad_original').checked = true;
+		}
+		if (u_check_special_start == 0) {
+			document.getElementById('chk_specialCheck').checked = false;
+		}
+	</script>
+  </body>
+</html>
