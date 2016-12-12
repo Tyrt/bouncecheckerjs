@@ -26,7 +26,7 @@ function m()
 	
 	// Do some checking to make sure input looks ok
 	if (!isNaN(floor_height)) {
-		if (floor_height > 999999) {
+		if (floor_height > 9999999) {
 			// Can find higher bounces but it might start to hang
 			document.getElementById("bounceInfo").innerHTML = "Silly..";
 			return 0;
